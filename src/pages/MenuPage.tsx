@@ -3,6 +3,7 @@ import { fetchProducts } from '../services/googleSheets';
 import { ProductCard } from '../components/ProductCard';
 import type { Product } from '../types/product';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [
   { id: 'TODOS', name: 'Todos', icon: '📋' },
@@ -20,6 +21,7 @@ export function MenuPage() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('TODOS');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadData() {
@@ -48,9 +50,8 @@ export function MenuPage() {
 
   return (
     <div className="space-y-6">
-      {/* BANNER DESTACADO */}
       <div 
-        onClick={() => console.log('Abrir configurador')}
+        onClick={() => navigate('/builder')}
         className="bg-gradient-to-br from-brand-primary to-orange-600 rounded-3xl p-6 shadow-[0_8px_20px_-6px_rgba(249,115,22,0.5)] relative overflow-hidden active:scale-[0.98] transition-transform cursor-pointer border-b-4 border-orange-700"
       >
         <div className="relative z-10">
@@ -60,7 +61,6 @@ export function MenuPage() {
         <span className="absolute -bottom-6 -right-4 text-9xl opacity-20 rotate-12 drop-shadow-2xl">🍔</span>
       </div>
 
-      {/* BARRA DE FILTROS */}
       <div className="flex items-center gap-2">
         <button 
           onClick={() => scroll('left')} 
@@ -97,7 +97,6 @@ export function MenuPage() {
         </button>
       </div>
 
-      {/* LISTADO DE PRODUCTOS */}
       <div className="space-y-4">
         <h2 className="text-lg font-black text-brand-text uppercase px-1 border-b-2 border-gray-100 pb-2">
           {activeCategory === 'TODOS' ? 'Menú Completo' : activeCategory}
