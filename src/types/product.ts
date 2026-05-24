@@ -18,6 +18,15 @@ export interface Product {
   isAvailable: boolean;
 }
 
+export interface SpecialMeal {
+  name: string;
+  description: string;
+  price: number;
+  isActive: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+}
+
 export interface CartItem {
   cartId: string;
   product?: Product;

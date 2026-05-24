@@ -12,7 +12,6 @@ const FREE_LIMITS = {
   SAUCE: 3
 };
 
-// 👈 Definimos el orden estricto de las secciones
 const SECTION_ORDER = ['BASE', 'PROTEIN', 'TOPPING', 'SAUCE'];
 
 export function BuilderPage() {
@@ -69,7 +68,6 @@ export function BuilderPage() {
         setSelectedBase(null);
       } else {
         setSelectedBase(id);
-        // Esto ya hacía un auto-avance cuando elegías la base
         setOpenSection('PROTEIN');
       }
     } else if (category === 'PROTEIN') {
@@ -87,19 +85,15 @@ export function BuilderPage() {
     }
   };
 
-  // 👈 NUEVA LÓGICA DE AUTO-AVANCE
   const toggleSection = (category: string) => {
     setOpenSection(prev => {
-      // Si el usuario da clic en la sección que YA está abierta (intentando cerrarla)
       if (prev === category) {
         const currentIndex = SECTION_ORDER.indexOf(category);
         const nextIndex = currentIndex + 1;
         
-        // Si existe una siguiente sección, la abrimos. Si es la última (Salsas), cerramos todo (null)
         return nextIndex < SECTION_ORDER.length ? SECTION_ORDER[nextIndex] : null;
       }
       
-      // Si da clic en una sección diferente, simplemente abre esa
       return category;
     });
   };
