@@ -15,9 +15,10 @@ const CATEGORY_ICONS: Record<string, string> = {
 interface ProductCardProps {
   product: Product;
   onSelect: (product: Product) => void;
+  onAddToCart: (product: Product) => void;
 }
 
-export function ProductCard({ product, onSelect }: ProductCardProps) {
+export function ProductCard({ product, onSelect, onAddToCart }: ProductCardProps) {
   const [imgError, setImgError] = useState(false); 
   
   const priceFormatted = product.price ? product.price.toLocaleString() : '0';
@@ -56,7 +57,13 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
           <span className="font-black text-brand-primary text-lg">
             ${priceFormatted}
           </span>
-          <button className="bg-gray-100 text-brand-text text-xs font-black px-4 py-2 rounded-lg hover:bg-brand-primary hover:text-white transition-colors shadow-sm">
+          <button 
+            onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(product);
+            }}
+            className="bg-gray-100 text-brand-text text-xs font-black px-4 py-2 rounded-lg hover:bg-brand-primary hover:text-white transition-colors shadow-sm"
+            >
             Añadir
           </button>
         </div>

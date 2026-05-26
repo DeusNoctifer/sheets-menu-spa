@@ -22,6 +22,7 @@ export interface SpecialMeal {
   name: string;
   description: string;
   price: number;
+  image: string;
   isActive: boolean;
   startDate: Date | null;
   endDate: Date | null;
