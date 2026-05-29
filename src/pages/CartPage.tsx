@@ -58,33 +58,34 @@ export function CartPage() {
   }
 
   return (
-    <div className="pb-40 animate-in fade-in duration-500">
-
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
+    <div className="-m-4 flex h-full max-h-full flex-col overflow-hidden animate-in fade-in duration-500">
+      <div className="app-main-scroll flex-1 min-h-0 overflow-y-auto p-4">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate('/')}
+              className="p-2 bg-white rounded-full shadow-sm border border-gray-100 text-brand-text active:scale-90 transition-transform"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <h2 className="text-xl font-black text-brand-text uppercase italic tracking-tight">Tu Pedido</h2>
+          </div>
           <button 
-            onClick={() => navigate('/')}
-            className="p-2 bg-white rounded-full shadow-sm border border-gray-100 text-brand-text active:scale-90 transition-transform"
+            onClick={clearCart}
+            className="text-[10px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-3 py-1.5 rounded-lg active:bg-red-100"
           >
-            <ChevronLeft size={24} />
+            Vaciar
           </button>
-          <h2 className="text-xl font-black text-brand-text uppercase italic tracking-tight">Tu Pedido</h2>
         </div>
-        <button 
-          onClick={clearCart}
-          className="text-[10px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-3 py-1.5 rounded-lg active:bg-red-100"
-        >
-          Vaciar
-        </button>
+
+        <div className="space-y-3">
+          {items.map((item) => (
+            <CartItemRow key={item.cartItemId} item={item} />
+          ))}
+        </div>
       </div>
 
-      <div className="space-y-3">
-        {items.map((item) => (
-          <CartItemRow key={item.cartItemId} item={item} />
-        ))}
-      </div>
-
-      <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full md:max-w-md bg-white/95 backdrop-blur-md border-t border-gray-100 p-6 z-[40] shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
+      <div className="shrink-0 bg-white/95 backdrop-blur-md border-t border-gray-100 p-6 shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
         <div className="flex justify-between items-center mb-4">
           <span className="text-gray-400 font-bold text-sm uppercase tracking-widest">Total ({totalItems} items)</span>
           <span className="text-2xl font-black text-brand-text">${totalPrice.toLocaleString()}</span>

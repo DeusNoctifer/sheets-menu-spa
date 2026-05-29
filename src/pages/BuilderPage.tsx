@@ -298,7 +298,8 @@ export function BuilderPage() {
     };
 
     return (
-        <div className="pb-40">
+        <div className="-m-4 flex h-full max-h-full flex-col overflow-hidden">
+            <div className="app-main-scroll flex-1 min-h-0 overflow-y-auto p-4">
             <div className="flex items-center gap-4 mb-6">
                 <button
                     onClick={() => navigate('/')}
@@ -339,8 +340,9 @@ export function BuilderPage() {
                 {renderSection("Añade toppings", "TOPPING", 3)}
                 {renderSection("Las salsas", "SAUCE", 4)}
             </div>
+            </div>
 
-            <div className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full md:max-w-md bg-white/95 backdrop-blur-sm border-t border-gray-100 p-4 z-[40] shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
+            <div className="shrink-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 p-4 shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
                 <button
                     disabled={!selectedBase || selectedProteins.length === 0}
                     onClick={handleAddToCart}

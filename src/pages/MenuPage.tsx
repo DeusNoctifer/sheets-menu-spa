@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { fetchProducts, fetchSpecialMeal } from '../services/googleSheets';
 import { ProductCard } from '../components/ProductCard';
 import { Toast } from '../components/Toast';
@@ -32,8 +32,7 @@ export function MenuPage() {
 
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-    const handleAddToCart = (item: Product | SpecialMeal) => {
-
+    const handleAddToCart = useCallback((item: Product | SpecialMeal) => {
         const safeId = ('id' in item) ? item.id : `special-${item.name.replace(/\s+/g, '-').toLowerCase()}`;
 
         addToCart({
@@ -45,7 +44,11 @@ export function MenuPage() {
         });
 
         setToastMessage(`${item.name} añadido al pedido`);
-    };
+    }, [addToCart]);
+
+    const handleSelectProduct = useCallback((product: Product) => {
+        setSelectedProduct(product);
+    }, []);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
@@ -86,11 +89,11 @@ export function MenuPage() {
         }
     };
 
-    const filteredProducts = products.filter(product => {
+    const filteredProducts = useMemo(() => products.filter(product => {
         if (product.category === 'MELONA') return false;
         if (activeCategory === 'TODOS') return true;
         return product.category === activeCategory;
-    });
+    }), [products, activeCategory]);
 
     return (
         <div className="space-y-6">
@@ -176,8 +179,8 @@ export function MenuPage() {
                             <ProductCard
                                 key={product.id}
                                 product={product}
-                                onSelect={(p) => setSelectedProduct(p)}
-                                onAddToCart={(p) => handleAddToCart(p)}
+                                onSelect={handleSelectProduct}
+                                onAddToCart={handleAddToCart}
                             />
                         ))}
                     </div>

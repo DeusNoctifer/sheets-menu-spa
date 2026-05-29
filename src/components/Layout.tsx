@@ -20,9 +20,9 @@ export function Layout({ children }: LayoutProps) {
   const { isOpen, loading } = useStoreStatus();
 
   return (
-    <div className="mx-auto min-h-screen w-full md:max-w-md bg-brand-bg flex flex-col relative md:shadow-2xl md:border-x md:border-gray-200">
+    <div className="mx-auto h-full w-full md:max-w-md bg-brand-bg flex flex-col relative md:shadow-2xl md:border-x md:border-gray-200 overflow-hidden">
       
-      <header className="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-md p-4 border-b border-gray-100 flex items-center justify-between shadow-sm">
+      <header className="shrink-0 z-50 bg-brand-bg/95 backdrop-blur-md p-4 border-b border-gray-100 flex items-center justify-between shadow-sm">
         <div className="flex justify-center">
           <img 
             src="/logo.png" 
@@ -42,7 +42,6 @@ export function Layout({ children }: LayoutProps) {
         </div>
         <div className="flex items-center gap-2">
       {loading ? (
-        // Un marcador de posición gris mientras lee la respuesta de Google Sheets
         <div className="bg-gray-100 text-gray-400 text-xs font-bold px-3 py-1 rounded-full border border-gray-200">
           Verificando...
         </div>
@@ -58,11 +57,11 @@ export function Layout({ children }: LayoutProps) {
     </div>
       </header>
 
-      <main className="flex-1 p-4 pb-28">
+      <main className="app-main-scroll flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4">
         {children}
       </main>
 
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full md:max-w-md bg-white/90 backdrop-blur-md h-16 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] border-t border-gray-100">
+      <nav className="shrink-0 w-full bg-white/90 backdrop-blur-md h-16 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] border-t border-gray-100">
 
         <button 
           onClick={() => navigate('/')}

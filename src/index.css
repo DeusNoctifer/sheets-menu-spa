@@ -8,6 +8,13 @@
   --color-brand-accent: #22C55E;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   background-color: var(--color-brand-bg);
   color: var(--color-brand-text);
@@ -16,6 +23,11 @@ body {
   padding: 0;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+}
+
+.app-main-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 .no-scrollbar::-webkit-scrollbar {

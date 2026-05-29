@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { Product } from '../types/product';
 
 const ADD_HIGHLIGHT_MS = 250;
@@ -20,7 +20,7 @@ interface ProductCardProps {
   onAddToCart: (product: Product) => void;
 }
 
-export function ProductCard({ product, onSelect, onAddToCart }: ProductCardProps) {
+export const ProductCard = memo(function ProductCard({ product, onSelect, onAddToCart }: ProductCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isAddHighlighted, setIsAddHighlighted] = useState(false);
   const highlightTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -44,7 +44,7 @@ export function ProductCard({ product, onSelect, onAddToCart }: ProductCardProps
   return (
     <div 
       onClick={() => onSelect(product)}
-      className="bg-white p-4 rounded-2xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.08)] border border-gray-100 flex items-center gap-4 active:scale-[0.98] hover:shadow-md transition-all cursor-pointer"
+      className="bg-white p-4 rounded-2xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.08)] border border-gray-100 flex items-center gap-4 active:scale-[0.98] hover:shadow-md transition-[transform,box-shadow] cursor-pointer"
     >
       <div className="w-20 h-20 bg-gray-50 rounded-xl flex items-center justify-center text-3xl shadow-inner border border-gray-100 overflow-hidden flex-shrink-0">
         {isImageUrl && !imgError ? (
@@ -85,4 +85,4 @@ export function ProductCard({ product, onSelect, onAddToCart }: ProductCardProps
       </div>
     </div>
   );
-}
+});
