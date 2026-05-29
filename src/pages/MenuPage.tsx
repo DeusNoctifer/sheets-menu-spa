@@ -19,7 +19,7 @@ const CATEGORIES = [
 ];
 
 export function MenuPage() {
-    const { addToCart } = useCart();
+    const { items, addToCart } = useCart();
     const { showToast } = useToast();
 
     const [products, setProducts] = useState<Product[]>([]);
@@ -32,6 +32,8 @@ export function MenuPage() {
 
     const handleAddToCart = useCallback((item: Product | SpecialMeal) => {
         const safeId = ('id' in item) ? item.id : `special-${item.name.replace(/\s+/g, '-').toLowerCase()}`;
+        const currentQty = items.find(i => i.cartItemId === safeId)?.quantity ?? 0;
+        const newQty = currentQty + 1;
 
         addToCart({
             cartItemId: safeId,
@@ -41,8 +43,8 @@ export function MenuPage() {
             image: item.image,
         });
 
-        showToast(`${item.name} — añadido al pedido`);
-    }, [addToCart, showToast]);
+        showToast(`${item.name} — x${newQty} en tu pedido`);
+    }, [addToCart, items, showToast]);
 
     const handleSelectProduct = useCallback((product: Product) => {
         setSelectedProduct(product);
