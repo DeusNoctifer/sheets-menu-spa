@@ -6,7 +6,6 @@ import type { Ingredient } from '../types/product';
 import { useCart } from '../context/CartContext';
 import { Toast } from '../components/Toast';
 
-
 const FREE_LIMITS = {
     PROTEIN: 1,
     TOPPING: 1,
@@ -135,7 +134,7 @@ export function BuilderPage() {
             price: calculateTotal(),
             quantity: 1,
             description: melonaDescription,
-            image: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png"
+            image: getBaseIcon(baseName)
         });
 
         setToastMessage("¡Tu Melona personalizada fue añadida!");
@@ -272,6 +271,32 @@ export function BuilderPage() {
         );
     };
 
+    const selectedBaseName = selectedBase ? ingredients.find(i => i.id === selectedBase)?.name : null;
+
+    const getBaseIcon = (baseName: string | null | undefined) => {
+        if (!baseName) return "";
+        
+        const nameNormalized = baseName.toLowerCase();
+        
+        if (nameNormalized.includes('papas') || nameNormalized.includes('papas')) {
+            return "https://tahinis.com/wp-content/uploads/2025/09/Crispy-Fries.png";
+        }
+        if (nameNormalized.includes('arepa')) {
+            return "https://epicerietropica.com/wp-content/uploads/2021/02/Arepasgrandex4.png";
+        }
+        if (nameNormalized.includes('perro')) {
+            return "https://img.freepik.com/foto-gratis/perro-caliente-clasico-ketchup-salsa-mostaza-aislado-sobre-fondo-blanco_123827-29686.jpg?semt=ais_hybrid&w=740&q=80"; // Icono de pan perro / hot dog
+        }
+        if (nameNormalized.includes('hamburguesa')) {
+            return "https://panamarbakery.com/public/Image/2025/2/14006_maxiburger_sesamo75precort.png";
+        }
+        if (nameNormalized.includes('patacón') || nameNormalized.includes('patacon')) {
+            return "https://delpla.co/wp-content/uploads/2022/03/desembolsado-2.png";
+        }
+
+        return "https://cdn-icons-png.flaticon.com/512/3075/3075977.png"; 
+    };
+
     return (
         <div className="pb-40">
             <div className="flex items-center gap-4 mb-6">
@@ -282,6 +307,30 @@ export function BuilderPage() {
                     <ChevronLeft size={24} />
                 </button>
                 <h2 className="text-xl font-black text-brand-text uppercase italic tracking-tight">Arma tu Melona</h2>
+            </div>
+
+            <div className="flex justify-center mb-6">
+                <div 
+                    className={`w-32 h-32 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
+                        selectedBase 
+                        ? 'border-4 border-brand-primary bg-orange-50/40 shadow-sm' 
+                        : 'border-4 border-dashed border-gray-200 bg-gray-50'
+                    }`}
+                >
+                    {selectedBase ? (
+                        <div className="flex flex-col items-center justify-center p-2 text-center">
+                            <img 
+                                src={getBaseIcon(selectedBaseName)} 
+                                alt={selectedBaseName || "Base"} 
+                                className="w-25 h-25 object-contain mb-1" 
+                            />
+                        </div>
+                    ) : (
+                        <span className="text-gray-400 text-xs font-bold text-center px-4">
+                            Selecciona una base
+                        </span>
+                    )}
+                </div>
             </div>
 
             <div className="space-y-4">
