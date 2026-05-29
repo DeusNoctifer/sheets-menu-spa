@@ -13,6 +13,7 @@ const FREE_LIMITS = {
 };
 
 const SECTION_ORDER = ['BASE', 'PROTEIN', 'TOPPING', 'SAUCE'];
+const REQUIRED_SECTIONS = new Set(['BASE', 'PROTEIN']);
 
 export function BuilderPage() {
 
@@ -108,7 +109,6 @@ export function BuilderPage() {
     };
 
     const handleAddToCart = () => {
-
         const getName = (id: string) => ingredients.find(i => i.id === id)?.name || '';
         const getNames = (ids: string[]) => ids.map(getName).join(', ');
 
@@ -145,7 +145,25 @@ export function BuilderPage() {
         setOpenSection('BASE');
     };
 
+    const canAdd = Boolean(selectedBase && selectedProteins.length > 0);
+
+    const handleAddClick = () => {
+        if (!selectedBase) {
+            setOpenSection('BASE');
+            showToast('Tu Melona — elige una base', 'remove');
+            return;
+        }
+        if (selectedProteins.length === 0) {
+            setOpenSection('PROTEIN');
+            showToast('Tu Melona — elige al menos una proteína', 'remove');
+            return;
+        }
+        handleAddToCart();
+    };
+
     if (loading) return <div className="p-10 text-center font-black text-brand-primary">Cargando ingredientes...</div>;
+
+    const selectedBaseName = selectedBase ? ingredients.find(i => i.id === selectedBase)?.name : null;
 
     const renderSection = (title: string, category: string, step: number) => {
         const sectionIngredients = ingredients.filter(i => i.category === category);
@@ -157,19 +175,30 @@ export function BuilderPage() {
                     category === 'TOPPING' ? selectedToppings.length > 0 :
                         selectedSauces.length > 0;
 
+        const isRequired = REQUIRED_SECTIONS.has(category);
+        const isPendingRequired = isRequired && !hasSelection;
+
         const getSummaryText = () => {
             if (category === 'BASE') {
                 const baseName = ingredients.find(i => i.id === selectedBase)?.name;
-                return baseName || "Pendiente";
+                return baseName || (isRequired ? 'Elige una opción' : 'Pendiente');
             }
             const count = category === 'PROTEIN' ? selectedProteins.length :
                 category === 'TOPPING' ? selectedToppings.length :
                     selectedSauces.length;
-            return count > 0 ? `${count} seleccionados` : "Pendiente";
+            if (count > 0) {
+                return category === 'PROTEIN'
+                    ? `${count} seleccionada${count > 1 ? 's' : ''}`
+                    : `${count} seleccionados`;
+            }
+            if (isRequired) return 'Elige al menos una';
+            return 'Opcional';
         };
 
         return (
-            <div className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? 'bg-white border-gray-100 shadow-inner' :
+            <div className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                isPendingRequired ? 'builder-section--required-pending' :
+                isOpen ? 'bg-white border-gray-100 shadow-inner' :
                     hasSelection ? 'bg-orange-50/30 border-orange-200 shadow-sm' :
                         'bg-white border-gray-100'
                 }`}>
@@ -184,11 +213,23 @@ export function BuilderPage() {
                             {step}
                         </span>
                         <div className="flex flex-col items-start">
-                            <h3 className={`font-black uppercase tracking-tight text-sm transition-colors duration-300 ${isOpen || hasSelection ? 'text-brand-primary' : 'text-brand-text'
-                                }`}>{title}</h3>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                                <h3 className={`font-black uppercase tracking-tight text-sm transition-colors duration-300 ${isOpen || hasSelection ? 'text-brand-primary' : 'text-brand-text'
+                                    }`}>{title}</h3>
+                                {hasSelection ? (
+                                    <span className="builder-section-badge builder-section-badge--required-done">Listo</span>
+                                ) : isRequired ? (
+                                    <span className="builder-section-badge builder-section-badge--required">Obligatorio</span>
+                                ) : (
+                                    <span className="builder-section-badge builder-section-badge--optional">Opcional</span>
+                                )}
+                            </div>
                             <div className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-0 opacity-0' : 'max-h-4 opacity-100'
                                 }`}>
-                                <span className={`text-[11px] font-bold -mt-0.5 block transition-colors duration-300 ${hasSelection ? 'text-brand-primary/80' : 'text-brand-text/50'
+                                <span className={`text-[11px] font-bold -mt-0.5 block transition-colors duration-300 ${
+                                    hasSelection ? 'text-brand-primary/80' :
+                                    isPendingRequired ? 'text-brand-primary' :
+                                    'text-brand-text/50'
                                     }`}>
                                     {getSummaryText()}
                                 </span>
@@ -270,8 +311,6 @@ export function BuilderPage() {
         );
     };
 
-    const selectedBaseName = selectedBase ? ingredients.find(i => i.id === selectedBase)?.name : null;
-
     const getBaseIcon = (baseName: string | null | undefined) => {
         if (!baseName) return "";
         
@@ -344,11 +383,11 @@ export function BuilderPage() {
             <div className="checkout-bar">
                 <button
                     type="button"
-                    disabled={!selectedBase || selectedProteins.length === 0}
-                    onClick={handleAddToCart}
-                    className="btn-cta btn-cta--split"
+                    onClick={handleAddClick}
+                    className={`btn-cta btn-cta--split${canAdd ? '' : ' btn-cta--incomplete'}`}
+                    aria-disabled={!canAdd}
                 >
-                    <span>Agregar al carrito</span>
+                    <span>{canAdd ? 'Agregar al carrito' : 'Completa base y proteína'}</span>
                     <span className="btn-cta__price">${calculateTotal().toLocaleString()}</span>
                 </button>
             </div>
